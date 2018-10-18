@@ -1,7 +1,6 @@
 # Paige
 Use API endpoints to request any webpage and receive structured layout and content data in response.
-<br><br><br>
-<pre>Hello</pre>
+<br><br><br><br>
 Example visual response for www.youtube.com
 <br><br>
 ![Alt text](build/example.png?raw=true "Title")
