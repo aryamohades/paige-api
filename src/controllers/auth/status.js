@@ -3,13 +3,9 @@ const os = require('os');
 const startedAt = new Date();
 
 const status = (req, res, next) => {
-  const server = req.app;
-
-  if (req.params.info) {
+  if (req.query.info) {
     res.send({
       status: 'up',
-      version: server.get('version'),
-      sha: server.get('git sha'),
       startedAt,
       node: {
         version: process.version,

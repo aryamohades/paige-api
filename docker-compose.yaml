@@ -8,13 +8,12 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - phantomjs
       - postgres
+      - browserless
     environment:
       NODE_ENV: development
       PORT: 8080
-      WEBDRIVER_HOST: phantomjs
-      WEBDRIVER_PORT: 8910
+      BROWSERLESS_URL: ws://browserless:3000
       DATABASE_URL: postgres://user@postgres:5432/example
       APP_SECRET: 12345abcde
       MAILGUN_EMAIL: <MAILGUN_EMAIL e.g. postmaster@sandbox.mailgun.org>
@@ -23,12 +22,17 @@ services:
       RESET_PASSWORD_URL: http://localhost:8080/reset-password?token=
       LOGIN_URL: http://localhost:8080/login
       CONFIRM_EMAIL_URL: http://localhost:8080/confirm-email?token=
-  phantomjs:
-    container_name: "paige_phantomjs"
-    image: wernight/phantomjs:2.1.1
+  browserless:
+    image: browserless/chrome:latest
+    container_name: "browserless"
+    environment:
+      - PREBOOT_CHROME=true
+      - KEEP_ALIVE=true
+      - ENABLE_CORS=true
+      - DEBUG=browserless/chrome
+      - MAX_CONCURRENT_SESSIONS=10
     ports:
-      - "8910:8910"
-    command: "phantomjs --webdriver=8910 --ignore-ssl-errors=true --ssl-protocol=any"
+        - 3002:3000
   postgres:
     container_name: paige_postgres
     image: postgres:9.6.2-alpine

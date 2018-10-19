@@ -1,14 +1,13 @@
-const webdriverio = require('webdriverio');
+const puppeteer = require('puppeteer-core');
 const { BadRequestError } = require('../../errors');
+const pageScript = require('../../scripts/page-service');
 const renderPage = require('../../scripts/render-page');
-const {
-  PAGE_SCRIPT,
-  WEBDRIVER_OPTIONS,
-  DEFAULT_PAGE_CONFIG
-} = require('../../constants');
+const { DEFAULT_PAGE_CONFIG } = require('../../constants');
+
+const { BROWSERLESS_URL } = process.env;
 
 const getPage = async (req, res, next) => {
-  let driver;
+  let browser;
 
   try {
     const { url } = req.query;
@@ -16,8 +15,6 @@ const getPage = async (req, res, next) => {
     if (!url) {
       throw new BadRequestError('Missing url in query');
     }
-
-    driver = webdriverio.remote(WEBDRIVER_OPTIONS).init();
 
     const {
       screenWidth = DEFAULT_PAGE_CONFIG.screenWidth,
@@ -34,38 +31,41 @@ const getPage = async (req, res, next) => {
       includeMaxDepth = DEFAULT_PAGE_CONFIG.includeMaxDepth
     } = req.query;
 
-    const script = PAGE_SCRIPT + `return PageService.run({
-      includeTags: '${includeTags}',
-      excludeTags: '${excludeTags}',
-      includeHidden: ${includeHidden},
-      includeZeroSize: ${includeZeroSize},
-      includeMinWidth: ${includeMinWidth},
-      includeMaxWidth: ${includeMaxWidth},
-      includeMinHeight: ${includeMinHeight},
-      includeMaxHeight: ${includeMaxHeight},
-      includeMinDepth: ${includeMinDepth},
-      includeMaxDepth: ${includeMaxDepth}
-    })`;
-
-    driver.windowHandleSize({
-      width: screenWidth,
-      height: screenHeight
+    browser = await puppeteer.connect({
+      browserWSEndpoint: BROWSERLESS_URL,
+      defaultViewport: {
+        width: screenWidth,
+        height: screenHeight
+      }
     });
 
-    await driver.url(url);
+    const page = await browser.newPage();
 
-    const result = await driver.execute(script);
+    await page.goto(url, {
+      waitUntil: 'networkidle2'
+    });
 
-    if (result.status === 0) {
-      renderPage(result.value);
-    }
+    const result = await page.evaluate(pageScript, {
+      includeTags,
+      excludeTags,
+      includeHidden,
+      includeZeroSize,
+      includeMinWidth,
+      includeMaxWidth,
+      includeMinHeight,
+      includeMaxHeight,
+      includeMinDepth,
+      includeMaxDepth
+    });
 
-    res.send(result.value);
+    renderPage(result);
+
+    res.send(result);
   } catch (e) {
     next(e);
   } finally {
-    if (driver) {
-      await driver.end();
+    if (browser) {
+      browser.disconnect();
     }
   }
 };

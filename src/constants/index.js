@@ -1,22 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const {
-  WEBDRIVER_HOST,
-  WEBDRIVER_PORT
-} = process.env;
-
 module.exports = {
-  PAGE_SCRIPT: fs.readFileSync(path.join(
-    __dirname,
-    '../scripts/page-service.js'
-  )).toString(),
   DEFAULT_PAGE_CONFIG: {
-    screenWidth: 1024,
-    screenHeight: 500,
+    screenWidth: 1280,
+    screenHeight: 720,
     includeTags: '',
     excludeTags: '',
     includeHidden: false,
+    includeFixedPosition: false,
     includeZeroSize: false,
     includeMinWidth: null,
     includeMaxWidth: null,
@@ -24,13 +16,6 @@ module.exports = {
     includeMaxHeight: null,
     includeMinDepth: null,
     includeMaxDepth: null
-  },
-  WEBDRIVER_OPTIONS: {
-    host: WEBDRIVER_HOST,
-    port: WEBDRIVER_PORT,
-    desiredCapabilities: {
-      browserName: 'phantomjs'
-    }
   },
   DEPTH_COLORS: [
     '#0400ff',

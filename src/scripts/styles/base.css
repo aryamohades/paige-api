@@ -1,0 +1,8 @@
+* {
+  box-sizing: border-box;
+  border: 2px solid transparent;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}

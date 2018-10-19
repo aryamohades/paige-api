@@ -1,10 +1,10 @@
 /* eslint-disable no-var, prefer-arrow-callback */
-var PageService = (function() { // eslint-disable-line no-unused-vars
-  var options;
+module.exports = (opts) => { // eslint-disable-line no-unused-vars
   var sessionId = null;
   var numElements = 0;
   var maxDepth = 0;
   var elementMap = {};
+  var options;
 
   /**
    * Generate unique id for this session
@@ -52,18 +52,17 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
   }
 
   /**
-   * Determine if element has a text node child
+   * Determine if element has a non empty text node child
    *
-   * @param {object} el
+   * @param {Node|HTMLElement} el
    */
-  function hasTextNode(el) {
+  function hasNonEmptyTextNode(el) {
     var child = el.firstChild;
 
     while (child) {
-      if (child.nodeType === Node.TEXT_NODE) {
+      if (child.nodeType === Node.TEXT_NODE && child.textContent.trim() !== '') {
         return true;
       }
-
       child = child.nextSibling;
     }
 
@@ -71,21 +70,10 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
   }
 
   /**
-   * Get element's width and height in pixels
+   * Get element's top left corner coordinates,
+   * measured from top left of page = (0, 0)
    *
-   * @param {object} el
-   */
-  function getElementSize(el) {
-    return {
-      width: el.offsetWidth,
-      height: el.offsetHeight
-    };
-  }
-
-  /**
-   * Get element's top left corner coordinates, measuerd from top left of page as (0, 0)
-   *
-   * @param {object} el
+   * @param {Node|HTMLElement} el
    */
   function getElementPosition(el) {
     var box = el.getBoundingClientRect();
@@ -114,7 +102,7 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
   /**
    * Get element's tag specific attributes
    *
-   * @param {object} el
+   * @param {Node|HTMLElement} el
    * @param {object} data
    */
   function getElementAttributes(el, data) {
@@ -163,13 +151,67 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
       return false;
     }
 
+    if (data.position === 'fixed' && !options.includeFixedPosition) {
+      return false;
+    }
+
     return true;
+  }
+
+  /**
+   * Unwrap all children of dom element
+   *
+   * @param {Node|HTMLElement} el
+   */
+  function unwrapChildren(el) {
+    var children = el.children;
+
+    if (!children) {
+      return;
+    }
+
+    for (var i = 0; i < children.length; ++i) {
+      if (children[i].nodeType !== Node.TEXT_NODE) {
+        unwrap(children[i]);
+      }
+    }
+
+    if (el.firstElementChild) {
+      unwrapChildren(el);
+    }
+  }
+
+  /**
+   * Unwrap element
+   *
+   * @param {Node|HTMLElement} el
+   */
+  function unwrap(el) {
+    var parent = el.parentNode;
+
+    while (el.firstChild) {
+      parent.insertBefore(el.firstChild, el);
+    }
+
+    parent.removeChild(el);
+  }
+
+  /**
+   * Get element's width and height in pixels
+   *
+   * @param {Node|HTMLElement} el
+   */
+  function getElementSize(el) {
+    return {
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
   }
 
   /**
    * Extract data from DOM element
    *
-   * @param {object} el
+   * @param {Node|HTMLElement} el
    */
   function getElementData(el) {
     var style = window.getComputedStyle(el);
@@ -184,10 +226,11 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
       parentId: el.parentElement.getAttribute(sessionId),
       numChildren: el.childElementCount,
       borderRadius: style.borderRadius,
-      children: []
+      children: [],
+      positionType: style.position
     };
 
-    if (hasTextNode(el)) {
+    if (hasNonEmptyTextNode(el)) {
       data.text = el.textContent;
     }
 
@@ -220,6 +263,10 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
 
     while (queue.length !== 0) {
       var el = queue.pop();
+
+      if (hasNonEmptyTextNode(el)) {
+        unwrapChildren(el);
+      }
 
       var elementData = getElementData(el);
 
@@ -260,28 +307,17 @@ var PageService = (function() { // eslint-disable-line no-unused-vars
     sessionId = generateId();
   }
 
-  /**
-   * Run the page analyzer
-   *
-   * @param {object} sessionOptions
-   */
-  function run(sessionOptions) {
-    setOptions(sessionOptions);
+  setOptions(opts);
 
-    var elementsData = processElements();
+  var elementsData = processElements();
 
-    return {
-      title: document.title,
-      url: window.location.href,
-      pageWidth: getPageWidth(),
-      pageHeight: getPageHeight(),
-      maxDepth: maxDepth,
-      numElements: elementsData.length,
-      elements: elementsData
-    };
-  }
-
-  return {
-    run: run
-  };
-}());
+  return Promise.resolve({
+    title: document.title,
+    url: window.location.href,
+    pageWidth: getPageWidth(),
+    pageHeight: getPageHeight(),
+    maxDepth: maxDepth,
+    numElements: elementsData.length,
+    elements: elementsData
+  });
+};
