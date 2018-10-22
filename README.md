@@ -8,8 +8,8 @@ Build web page scrapers and web crawlers that run in the cloud. No confusing set
 * Tasks can be scheduled to run automatically at a certain time or repeatedly at certain intervals.
 * Take a screenshot by for debugging by passing in an additional query parameter.
 * Preview the response data to debug your page script.
-<br><br>
-You can also request raw visual content information as seen below.
+* You can also request raw visual content data as seen below.
+* Configure a crawler by specifiying which elements on the page to click to continue e.g. clicking next to get additional pages
 <br><br><br><br>
 Example visual response for www.youtube.com
 <br><br>
