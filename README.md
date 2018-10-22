@@ -1,11 +1,21 @@
 # Paige
-Use API endpoints to request any webpage and receive structured layout and content data in response.
+Build web page scrapers and web crawlers that run in the cloud. No confusing setup necessary; just create an endpoint, point it at a url, and paste in your page script.
+
+**Features**
+* Use JQuery or Underscore as needed. They are injected into the requested page dynamically.
+* Tasks can be configured to run synchronously or asynchronously. 
+* View the status of any running task at any point through the dashboard.
+* Tasks can be scheduled to run automatically at a certain time or repeatedly at certain intervals.
+* Take a screenshot by for debugging by passing in an additional query parameter.
+* Preview the response data to debug your page script.
+
+You can also request raw visual content information as seen below.
 <br><br><br><br>
 Example visual response for www.youtube.com
 <br><br>
 ![Alt text](build/example.png?raw=true "Title")
 <br><br><br>
-Example data response for www.aryamohades.com
+Example visual content data response for www.aryamohades.com
 <br><br>
 <pre>
 {
