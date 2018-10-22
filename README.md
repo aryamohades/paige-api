@@ -4,7 +4,7 @@ Use API endpoints to request any webpage and receive structured layout and conte
 Example visual response for www.youtube.com
 <br><br>
 ![Alt text](build/example.png?raw=true "Title")
-<br><br><br><br>
+<br><br><br>
 Example data response for www.aryamohades.com
 <br><br>
 <pre>
