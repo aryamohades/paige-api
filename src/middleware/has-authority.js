@@ -1,7 +1,7 @@
 const roles = require('../auth/roles');
 const { UnauthorizedError } = require('../errors');
 
-const hasAuthority = (role) => (
+const hasAuthority = role => (
   (req, res, next) => {
     try {
       const { user } = req;

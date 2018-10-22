@@ -31,18 +31,29 @@ const getPage = async (req, res, next) => {
       includeMaxDepth = DEFAULT_PAGE_CONFIG.includeMaxDepth
     } = req.query;
 
+    const width = Number(screenWidth);
+    const height = Number(screenHeight);
+
+    if (!Number.isInteger(width) || width < 0) {
+      throw new BadRequestError('Screen width must be a positive integer');
+    }
+
+    if (!Number.isInteger(height) || height < 0) {
+      throw new BadRequestError('Screen height must be a positive integer');
+    }
+
     browser = await puppeteer.connect({
       browserWSEndpoint: BROWSERLESS_URL,
       defaultViewport: {
-        width: screenWidth,
-        height: screenHeight
-      }
+        width,
+        height,
+      },
     });
 
     const page = await browser.newPage();
 
     await page.goto(url, {
-      waitUntil: 'networkidle2'
+      waitUntil: 'networkidle2',
     });
 
     const result = await page.evaluate(pageScript, {
@@ -55,7 +66,7 @@ const getPage = async (req, res, next) => {
       includeMinHeight,
       includeMaxHeight,
       includeMinDepth,
-      includeMaxDepth
+      includeMaxDepth,
     });
 
     renderPage(result);
@@ -70,4 +81,6 @@ const getPage = async (req, res, next) => {
   }
 };
 
-module.exports = getPage;
+module.exports = {
+  getPage,
+};

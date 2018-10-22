@@ -3,5 +3,5 @@ const authControllers = require('./auth');
 
 module.exports = {
   ...publicControllers,
-  ...authControllers
+  ...authControllers,
 };

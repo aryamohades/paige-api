@@ -1,4 +1,4 @@
-const create = (config) => {
+const create = config => {
   const {
     model,
     source,
@@ -7,7 +7,8 @@ const create = (config) => {
     serialize,
     associate,
     updateRequest,
-    end = true
+    reload = false,
+    end = true,
   } = config;
 
   return async (req, res, next) => {
@@ -22,10 +23,14 @@ const create = (config) => {
         await Promise.all(associate(req, newEntry));
       }
 
+      if (reload) {
+        await newEntry.reload();
+      }
+
       if (end) {
         const responseData = serialize
           ? serialize(newEntry)
-          : null;
+          : newEntry;
 
         res.status(201).send(responseData);
       } else {

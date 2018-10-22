@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
  *
  * @param {Object} user - User object
  */
-module.exports = (user) => {
+module.exports = user => {
   const token = jwt.sign({
-    id: user.id
+    id: user.id,
   }, process.env.APP_SECRET);
 
   return `JWT ${token}`;

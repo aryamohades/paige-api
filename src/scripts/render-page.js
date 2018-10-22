@@ -9,7 +9,7 @@ const numColors = DEPTH_COLORS.length;
 
 const baseStyle = fs.readFileSync(path.join(
   __dirname,
-  './styles/base.css'
+  './styles/base.css',
 )).toString();
 
 const shadeColor = (color, percent) => {
@@ -22,7 +22,7 @@ const shadeColor = (color, percent) => {
   return '#' + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
 };
 
-module.exports = (data) => {
+module.exports = data => {
   const $ = cheerio.load('<!doctype html><html><head><title></title></head><body></body></html>');
   const style = $(`<style>${baseStyle}</style>`);
 
@@ -47,7 +47,7 @@ module.exports = (data) => {
       el = $('<img>');
       el.attr(
         'src',
-        `https://imgplaceholder.com/${element.size.width}x${element.size.height}/dfe6e9/a9b6bc/fa-image`
+        `https://imgplaceholder.com/${element.size.width}x${element.size.height}/dfe6e9/a9b6bc/fa-image`,
       );
     }
 
@@ -60,7 +60,7 @@ module.exports = (data) => {
       width: element.size.width + 'px',
       height: element.size.height + 'px',
       left: element.position.x + 'px',
-      top: element.position.y + 'px'
+      top: element.position.y + 'px',
     });
 
     if (element.numChildren === 0 && element.text) {
@@ -75,7 +75,7 @@ module.exports = (data) => {
   const buildDir = path.join(__dirname, '../../build');
   const filePath = path.join(__dirname, '../../build/index.html');
 
-  mkdirp(buildDir, (err) => {
+  mkdirp(buildDir, err => {
     if (!err) {
       fs.writeFileSync(filePath, $.html(), { flag: 'w' });
     }

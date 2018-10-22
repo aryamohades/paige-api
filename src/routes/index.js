@@ -6,12 +6,12 @@ const publicRoutes = require('./public');
 const router = express.Router();
 
 // Inject auth routes
-Object.values(authRoutes).forEach((route) => {
+Object.values(authRoutes).forEach(route => {
   route(router);
 });
 
 // Inject public routes
-Object.values(publicRoutes).forEach((route) => {
+Object.values(publicRoutes).forEach(route => {
   route(router);
 });
 

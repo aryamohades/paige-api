@@ -1,7 +1,14 @@
-const fs = require('fs');
-const path = require('path');
-
 module.exports = {
+  RUN_STATUS: {
+    RUNNING: 'RUNNING',
+    SUCCESS: 'SUCCESS',
+    ERROR: 'ERROR',
+  },
+  QUERY_METHODS: {
+    findOne: 'findOne',
+    findAll: 'findAll',
+    findAndCountAll: 'findAndCountAll',
+  },
   DEFAULT_PAGE_CONFIG: {
     screenWidth: 1280,
     screenHeight: 720,
@@ -15,7 +22,7 @@ module.exports = {
     includeMinHeight: null,
     includeMaxHeight: null,
     includeMinDepth: null,
-    includeMaxDepth: null
+    includeMaxDepth: null,
   },
   DEPTH_COLORS: [
     '#0400ff',
@@ -107,6 +114,6 @@ module.exports = {
     '#FF0BF0',
     '#FF0CF0',
     '#FF0DF0',
-    '#FF0EF0'
-  ]
+    '#FF0EF0',
+  ],
 };

@@ -5,7 +5,6 @@ const login = (req, res) => {
     email,
     username,
     createdAt,
-    notes
   } = req.user;
 
   res.status(200).send({
@@ -13,9 +12,8 @@ const login = (req, res) => {
       email,
       username,
       createdAt,
-      notes
     },
-    token: token(req.user)
+    token: token(req.user),
   });
 };
 

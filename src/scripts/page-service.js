@@ -1,5 +1,5 @@
 /* eslint-disable no-var, prefer-arrow-callback */
-module.exports = (opts) => { // eslint-disable-line no-unused-vars
+module.exports = opts => { // eslint-disable-line no-unused-vars
   var sessionId = null;
   var numElements = 0;
   var maxDepth = 0;
@@ -34,7 +34,7 @@ module.exports = (opts) => { // eslint-disable-line no-unused-vars
       document.body.offsetHeight,
       document.documentElement.clientHeight,
       document.documentElement.scrollHeight,
-      document.documentElement.offsetHeight
+      document.documentElement.offsetHeight,
     );
   }
 
@@ -95,7 +95,7 @@ module.exports = (opts) => { // eslint-disable-line no-unused-vars
 
     return {
       x: x,
-      y: y
+      y: y,
     };
   }
 
@@ -204,7 +204,7 @@ module.exports = (opts) => { // eslint-disable-line no-unused-vars
   function getElementSize(el) {
     return {
       width: el.offsetWidth,
-      height: el.offsetHeight
+      height: el.offsetHeight,
     };
   }
 
@@ -227,7 +227,7 @@ module.exports = (opts) => { // eslint-disable-line no-unused-vars
       numChildren: el.childElementCount,
       borderRadius: style.borderRadius,
       children: [],
-      positionType: style.position
+      positionType: style.position,
     };
 
     if (hasNonEmptyTextNode(el)) {
@@ -318,6 +318,6 @@ module.exports = (opts) => { // eslint-disable-line no-unused-vars
     pageHeight: getPageHeight(),
     maxDepth: maxDepth,
     numElements: elementsData.length,
-    elements: elementsData
+    elements: elementsData,
   });
 };

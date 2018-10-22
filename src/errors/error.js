@@ -9,7 +9,7 @@ class AppError extends Error {
   json() {
     const data = {
       type: this.type,
-      code: this.code
+      code: this.code,
     };
 
     if (this.errors) {

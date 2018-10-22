@@ -1,4 +1,6 @@
 /* eslint-disable no-process-exit */
+require('dotenv').config();
+
 const http = require('http');
 const path = require('path');
 const os = require('os');
@@ -9,7 +11,7 @@ const models = require('./models');
 
 const {
   NODE_ENV,
-  PORT = 8000
+  PORT = 8000,
 } = process.env;
 
 const init = async () => {
@@ -17,13 +19,13 @@ const init = async () => {
     await models.sequelize.authenticate();
 
     await models.sequelize.sync({
-      force: NODE_ENV === 'development'
+      force: NODE_ENV === 'development',
     });
 
     if (NODE_ENV === 'development') {
       await models.fixtures.loadFile(
         path.join(__dirname, '/models/fixtures/*.json'),
-        models
+        models,
       );
     }
 
@@ -38,7 +40,7 @@ function fork() {
     cluster.fork();
   }
 
-  cluster.on('exit', (worker) => {
+  cluster.on('exit', worker => {
     if (!worker.exitedAfterDisconnect) {
       logger.error(`[api] Worker has died: ${worker.process.pid}`);
 

@@ -1,13 +1,13 @@
-const status = require('./status');
-const user = require('./user');
-const changePassword = require('./change-password');
-const changeEmail = require('./change-email');
+const account = require('./account');
 const page = require('./page');
+const status = require('./status');
+const action = require('./action');
+const run = require('./run');
 
 module.exports = {
+  account,
+  page,
   status,
-  user,
-  changePassword,
-  changeEmail,
-  page
+  action,
+  run,
 };

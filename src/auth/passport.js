@@ -1,6 +1,6 @@
 const {
   ExtractJwt,
-  Strategy
+  Strategy,
 } = require('passport-jwt');
 
 const LocalStrategy = require('passport-local');
@@ -12,21 +12,21 @@ const { APP_SECRET } = process.env;
 // Define jwt authentication options
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT'),
-  secretOrKey: APP_SECRET
+  secretOrKey: APP_SECRET,
 };
 
 // Define local login options
 const localOpts = {
   usernameField: 'email',
-  passwordField: 'password'
+  passwordField: 'password',
 };
 
 // Initialize local login strategy
 const localStrategy = new LocalStrategy(localOpts, async (email, password, done) => {
-  const user = await User.findOne({
+  const user = await User.scope('login').findOne({
     where: {
-      email
-    }
+      email,
+    },
   });
 
   if (!user) {
@@ -41,13 +41,17 @@ const localStrategy = new LocalStrategy(localOpts, async (email, password, done)
 // Initialize jwt authentication strategy
 const jwtStrategy = new Strategy(jwtOpts, async (payload, done) => {
   const user = await User.findById(payload.id, {
-    attributes: { exclude: ['password'] }
+    attributes: {
+      exclude: [
+        'password',
+      ],
+    },
   });
 
   return user ? done(null, user) : done(null, false);
 });
 
-module.exports = (passport) => {
+module.exports = passport => {
   passport.use(localStrategy);
   passport.use(jwtStrategy);
 };

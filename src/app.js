@@ -24,7 +24,7 @@ app.use(logger('dev'));
 app.use(parser.json());
 
 app.use(parser.urlencoded({
-  extended: false
+  extended: false,
 }));
 
 // Initialize passport

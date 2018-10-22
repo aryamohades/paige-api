@@ -1,6 +1,6 @@
 const { NotFoundError } = require('../errors');
 
-const edit = (config) => {
+const edit = config => {
   const {
     model,
     data,
@@ -9,7 +9,7 @@ const edit = (config) => {
     beforeUpdate,
     updateRequest,
     end = true,
-    errorOnEmpty = true
+    errorOnEmpty = true,
   } = config;
 
   return async (req, res, next) => {
@@ -22,7 +22,7 @@ const edit = (config) => {
 
       const q = {
         where: where(req),
-        returning: true
+        returning: true,
       };
 
       if (beforeUpdate) {

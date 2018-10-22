@@ -6,12 +6,12 @@ const validator = require('validator');
  *
  * @param {String} password - Plain text password
  */
-const encrypt = (password) => (
+const encrypt = password => (
   new Promise((resolve, reject) => {
     bcrypt.genSalt(10, (error, salt) => {
-      bcrypt.hash(password, salt, (err, hash) => {
-        return err ? reject(err) : resolve(hash);
-      });
+      bcrypt.hash(password, salt, (err, hash) => (
+        err ? reject(err) : resolve(hash)
+      ));
     });
   })
 );
@@ -24,9 +24,9 @@ const encrypt = (password) => (
  */
 const compare = (candidate, password) => (
   new Promise((resolve, reject) => {
-    bcrypt.compare(candidate, password, (err, match) => {
-      return err ? reject(err) : resolve(match);
-    });
+    bcrypt.compare(candidate, password, (err, match) => (
+      err ? reject(err) : resolve(match)
+    ));
   })
 );
 
@@ -35,14 +35,14 @@ const compare = (candidate, password) => (
  *
  * @param {String} email - Email to normalize
  */
-const normalizeEmail = (email) => (
+const normalizeEmail = email => (
   validator.normalizeEmail(email, {
-    all_lowercase: true
+    all_lowercase: true,
   })
 );
 
 module.exports = {
   encrypt,
   compare,
-  normalizeEmail
+  normalizeEmail,
 };

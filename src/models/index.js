@@ -7,15 +7,31 @@ const { DATABASE_URL } = process.env;
 const sequelize = new Sequelize(DATABASE_URL, {
   dialect: 'postgres',
   operatorsAliases: false,
-  logging: false
+  logging: false,
 });
 
 // Initialize models
 const User = require('./user')(sequelize);
+const Action = require('./action')(sequelize);
+const Run = require('./run')(sequelize);
+
+User.hasMany(Action, {
+  as: 'actions',
+  onDelete: 'cascade',
+});
+
+Action.hasMany(Run, {
+  as: 'runs',
+  onDelete: 'cascade',
+});
+
+Run.belongsTo(Action, { as: 'action' });
 
 module.exports = {
   fixtures,
   sequelize,
   Sequelize,
-  User
+  User,
+  Action,
+  Run,
 };

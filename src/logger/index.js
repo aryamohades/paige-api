@@ -6,9 +6,9 @@ const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: LOG_LEVEL,
-      timestamp: () => (new Date()).toISOString()
-    })
-  ]
+      timestamp: () => (new Date()).toISOString(),
+    }),
+  ],
 });
 
 module.exports = logger;

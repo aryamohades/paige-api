@@ -15,8 +15,6 @@ module.exports = {
     'no-mixed-operators': 0,
     'no-bitwise': 0,
     'vars-on-top': 0,
-    'arrow-body-style': 0,
-    'comma-dangle': ['error', 'never'],
     'no-unused-vars': ['error', { 'argsIgnorePattern': 'next' }],
     'no-plusplus': 0,
     'space-before-function-paren': 0,
@@ -29,6 +27,6 @@ module.exports = {
     'prefer-template': 0,
     'consistent-return': 0,
     'object-shorthand': 0,
-    'arrow-parens': 0
+    'arrow-parens': ['error', 'as-needed']
   }
 };

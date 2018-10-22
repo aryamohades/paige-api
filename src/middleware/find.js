@@ -1,9 +1,10 @@
 const { NotFoundError } = require('../errors');
+const { QUERY_METHODS } = require('../constants');
 
 const DEFAULT_LIMIT = 200;
 const MAX_LIMIT = 200;
 
-const getLimit = (req) => {
+const getLimit = req => {
   const limit = Number(req.query.limit);
 
   if (Number.isNaN(limit)) {
@@ -29,7 +30,7 @@ const getTotalPages = (total, pageSize) => (
   Math.ceil(total / pageSize)
 );
 
-const find = (config) => {
+const find = config => {
   const {
     model,
     attributes,
@@ -42,9 +43,9 @@ const find = (config) => {
     order,
     include,
     raw,
-    method = 'findAll',
-    distinct = true,
-    end = true
+    method = QUERY_METHODS.findAll,
+    distinct = false,
+    end = true,
   } = config;
 
   return async (req, res, next) => {
@@ -58,7 +59,7 @@ const find = (config) => {
         distinct,
         limit,
         offset,
-        raw
+        raw,
       };
 
       q.include = typeof include === 'function'
@@ -100,6 +101,12 @@ const find = (config) => {
           responseData = method === 'findAndCountAll'
             ? serialize(data.rows, options)
             : serialize(data, options);
+        } else if (method === 'findAndCountAll') {
+          responseData = {
+            items: data.rows,
+            total: options.total,
+            pages: options.pages,
+          };
         } else {
           responseData = data;
         }

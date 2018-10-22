@@ -3,11 +3,13 @@ const requireAuth = require('./require-auth');
 const optionalAuth = require('./optional-auth');
 const error = require('./error');
 const find = require('./find');
-const insert = require('./insert');
+const create = require('./create');
 const remove = require('./remove');
 const edit = require('./edit');
 const ifNotExists = require('./if-not-exists');
 const hasAuthority = require('./has-authority');
+const action = require('./action');
+const run = require('./run');
 
 module.exports = {
   error,
@@ -15,9 +17,11 @@ module.exports = {
   requireAuth,
   optionalAuth,
   find,
-  insert,
+  create,
   remove,
   edit,
   ifNotExists,
-  hasAuthority
+  hasAuthority,
+  action,
+  run,
 };

@@ -1,26 +1,26 @@
 const {
   UniqueViolationError,
-  ValidationError
+  ValidationError,
 } = require('../../errors');
 
 const errorHandlers = {};
 
 // Handle unique constraint violation
-errorHandlers.SequelizeUniqueConstraintError = (err) => {
+errorHandlers.SequelizeUniqueConstraintError = err => {
   throw new UniqueViolationError(err);
 };
 
 // Handle validation error
-errorHandlers.SequelizeValidationError = (err) => {
-  const errors = err.errors.map((e) => ({
+errorHandlers.SequelizeValidationError = err => {
+  const errors = err.errors.map(e => ({
     message: e.message,
-    field: e.path
+    field: e.path,
   }));
 
   throw new ValidationError(errors);
 };
 
-module.exports = (err) => {
+module.exports = err => {
   const handler = errorHandlers[err.name];
 
   if (handler) {

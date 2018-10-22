@@ -1,6 +1,6 @@
 const { NotFoundError } = require('../errors');
 
-const remove = (config) => {
+const remove = config => {
   const {
     model,
     where,
@@ -8,7 +8,7 @@ const remove = (config) => {
     source,
     method,
     end = true,
-    errorOnEmpty = true
+    errorOnEmpty = true,
   } = config;
 
   return async (req, res, next) => {

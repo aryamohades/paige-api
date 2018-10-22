@@ -57,5 +57,5 @@ module.exports = {
   ValidationError,
   NotFoundError,
   UnauthorizedError,
-  BadRequestError
+  BadRequestError,
 };

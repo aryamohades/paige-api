@@ -1,20 +1,20 @@
 const { ValidationError } = require('../errors');
 
-const ifNotExists = (config) => {
+const ifNotExists = config => {
   const {
     model,
-    fields
+    fields,
   } = config;
 
   return async (req, res, next) => {
     try {
       const errors = [];
 
-      const actions = fields.map((field) => (
+      const actions = fields.map(field => (
         model.findOne({
           where: {
-            [field]: req.body[field]
-          }
+            [field]: req.body[field],
+          },
         })
       ));
 
@@ -24,7 +24,7 @@ const ifNotExists = (config) => {
         if (instance) {
           errors.push({
             field: fields[i],
-            message: `That ${fields[i]} is already in use`
+            message: `That ${fields[i]} is already in use`,
           });
         }
       });
