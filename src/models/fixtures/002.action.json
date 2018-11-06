@@ -4,9 +4,38 @@
     "data": {
       "name": "test",
       "url": "https://news.ycombinator.com/news?p=1",
-      "script": "function testFn(context) {const $ = context.jQuery;const submissions = $('.athing').toArray();return submissions.map(el => {const $el = $(el);const $next = $el.next();return {rank: $el.find('.rank').text(),title: $el.find('.storylink').text(),link: $el.find('.storylink').attr('href'),score: parseInt($next.find('.score').text(), 10),author: $next.find('.hnuser').text(),time: $next.find('.age').text()};});}",
+      "script": "function testFn(context) {\n\tconst $ = context.jQuery;\n\tconst submissions = $('.athing').toArray();\n\treturn submissions.map(el => {\n\t\tconst $el = $(el);\n\t\tconst $next = $el.next();\n\t\treturn {\n\t\t\trank: $el.find('.rank').text(),\n\t\t\ttitle: $el.find('.storylink').text(),\n\t\t\tlink: $el.find('.storylink').attr('href'),\n\t\t\tscore: parseInt($next.find('.score').text(), 10),\n\t\t\tauthor: $next.find('.hnuser').text(),\n\t\t\ttime: $next.find('.age').text()\n\t\t};\n\t});\n}",
       "actionId": "admin~test",
+      "description": "My first action",
+      "isPublic": false,
+      "useJQuery": true,
+      "useUnderscore": false,
+      "cacheResponse": false,
+      "user_id": 1
+    }
+  },
+  {
+    "model": "Action",
+    "data": {
+      "name": "what",
+      "url": "https://news.ycombinator.com/news?p=1",
+      "script": "function testFn(context) {const $ = context.jQuery;const submissions = $('.athing').toArray();return submissions.map(el => {const $el = $(el);const $next = $el.next();return {rank: $el.find('.rank').text(),title: $el.find('.storylink').text(),link: $el.find('.storylink').attr('href'),score: parseInt($next.find('.score').text(), 10),author: $next.find('.hnuser').text(),time: $next.find('.age').text()};});}",
+      "actionId": "admin~what",
       "isPublic": true,
+      "useJQuery": true,
+      "useUnderscore": false,
+      "cacheResponse": false,
+      "user_id": 2
+    }
+  },
+  {
+    "model": "Action",
+    "data": {
+      "name": "MyAction",
+      "url": "https://news.ycombinator.com/news?p=1",
+      "script": "function testFn(context) {const $ = context.jQuery;const submissions = $('.athing').toArray();return submissions.map(el => {const $el = $(el);const $next = $el.next();return {rank: $el.find('.rank').text(),title: $el.find('.storylink').text(),link: $el.find('.storylink').attr('href'),score: parseInt($next.find('.score').text(), 10),author: $next.find('.hnuser').text(),time: $next.find('.age').text()};});}",
+      "actionId": "admin~MyAction",
+      "isPublic": false,
       "useJQuery": true,
       "useUnderscore": false,
       "cacheResponse": false,

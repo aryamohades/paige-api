@@ -2,17 +2,17 @@
   {
     "model": "User",
     "data": {
-      "id": 1,
       "username": "admin",
       "email": "admin@admin.com",
       "password": "123456",
-      "role": "admin"
+      "role": "admin",
+      "location": "Austin, TX",
+      "bio": "Typing keys on keyboard"
     }
   },
   {
     "model": "User",
     "data": {
-      "id": 2,
       "username": "bob",
       "email": "bob@test.com",
       "password": "123456"
@@ -21,7 +21,6 @@
   {
     "model": "User",
     "data": {
-      "id": 3,
       "username": "alice",
       "email": "alice@test.com",
       "password": "123456"

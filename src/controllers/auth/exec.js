@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer-core');
 const aws = require('aws-sdk');
-const { Run, Action } = require('../../models');
+const strip = require('strip-comments');
+const { Exec, Action } = require('../../models');
 const logger = require('../../logger');
 
 const {
@@ -20,26 +21,27 @@ const {
   action: {
     getActionById,
   },
-  run: {
-    getRunById,
+  exec: {
+    getExecById,
   },
 } = require('../../middleware');
 const {
   QUERY_METHODS,
-  RUN_STATUS,
+  EXEC_STATUS,
 } = require('../../constants');
 
 const jQueryPath = require.resolve('jquery');
 const underscorePath = require.resolve('underscore');
+const tableToJSONPath = require.resolve('table-to-json');
 
 const { BROWSERLESS_URL } = process.env;
 
 const pageFunction = (context, func) => func(context);
 
-const getRuns = [
+const getExecs = [
   getActionById(),
   find({
-    model: Run,
+    model: Exec,
     method: QUERY_METHODS.findAndCountAll,
     where: req => ({
       action_id: req.action.id,
@@ -55,12 +57,12 @@ const getRuns = [
   }),
 ];
 
-const getRun = [
+const getExec = [
   getActionById(),
-  getRunById(true),
+  getExecById(true),
 ];
 
-const createRun = [
+const createExec = [
   getActionById(),
   async (req, res, next) => {
     const { action } = req;
@@ -68,20 +70,20 @@ const createRun = [
     let browser;
     let contextHandle;
     let funcHandle;
-    let pendingRun;
+    let pendingExec;
 
     try {
       const requestStartTime = new Date().toISOString();
 
-      pendingRun = await Run.create({
+      pendingExec = await Exec.create({
         action_id: action.id,
         requestUrl: action.url,
-        status: RUN_STATUS.RUNNING,
+        status: EXEC_STATUS.RUNNING,
         startedAt: requestStartTime,
       });
 
       if (action.isAsync) {
-        res.send(pendingRun);
+        res.send(pendingExec);
       }
 
       browser = await puppeteer.connect({
@@ -106,14 +108,28 @@ const createRun = [
         });
       }
 
+      if (action.useTableToJSON) {
+        if (!action.useJQuery) {
+          await page.addScriptTag({
+            path: jQueryPath,
+          });
+        }
+
+        await page.addScriptTag({
+          path: tableToJSONPath,
+        });
+      }
+
       contextHandle = await page.evaluateHandle(() => ({
         jQuery: window.jQuery,
         underscore: window._,
       }));
 
+      const script = strip(action.script).trim();
+
       funcHandle = await page.evaluateHandle(funcString => (
         new Function(`return ${funcString}.apply(null, arguments)`) // eslint-disable-line no-new-func
-      ), action.script);
+      ), script);
 
       const pageFunctionResult = await page.evaluate(
         pageFunction,
@@ -126,7 +142,7 @@ const createRun = [
           fullPage: true,
         });
 
-        const screenshotKey = `${action.actionId}-${pendingRun.runId}`;
+        const screenshotKey = `${action.actionId}-${pendingExec.execId}`;
 
         const params = {
           Bucket: S3_BUCKET_NAME,
@@ -142,7 +158,7 @@ const createRun = [
           } else {
             logger.info(`[s3] image upload success with key: ${screenshotKey}`);
 
-            await pendingRun.update({
+            await pendingExec.update({
               screenshotKey,
               screenshotUploaded: true,
             });
@@ -152,11 +168,11 @@ const createRun = [
 
       const requestFinishTime = new Date().toISOString();
 
-      await pendingRun.update({
+      await pendingExec.update({
         responseData: pageFunctionResult,
         responseStatus: pageResponse.status(),
         responseHeaders: pageResponse.headers(),
-        status: RUN_STATUS.SUCCESS,
+        status: EXEC_STATUS.SUCCESS,
         finishedAt: requestFinishTime,
       });
 
@@ -164,9 +180,9 @@ const createRun = [
         res.send(pageFunctionResult);
       }
     } catch (e) {
-      if (pendingRun) {
-        await pendingRun.update({
-          status: RUN_STATUS.ERROR,
+      if (pendingExec) {
+        await pendingExec.update({
+          status: EXEC_STATUS.ERROR,
           errorMessage: e.message,
           finishedAt: new Date().toISOString(),
         });
@@ -189,20 +205,20 @@ const createRun = [
   },
 ];
 
-const deleteRun = [
+const deleteExec = [
   getActionById(),
   remove({
-    model: Run,
+    model: Exec,
     where: req => ({
       action_id: req.action.id,
-      runId: req.params.runId,
+      execId: req.params.execId,
     }),
   }),
 ];
 
 module.exports = {
-  getRuns,
-  getRun,
-  createRun,
-  deleteRun,
+  getExecs,
+  getExec,
+  createExec,
+  deleteExec,
 };

@@ -50,6 +50,16 @@ module.exports = sequelize => {
         },
       },
     },
+    location: {
+      field: 'location',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bio: {
+      field: 'bio',
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     resetPasswordToken: {
       field: 'reset_password_token',
       type: DataTypes.STRING,
@@ -91,6 +101,7 @@ module.exports = sequelize => {
     scopes: {
       login: {
         attributes: [
+          'id',
           'username',
           'email',
           'createdAt',

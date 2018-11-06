@@ -13,19 +13,21 @@ const sequelize = new Sequelize(DATABASE_URL, {
 // Initialize models
 const User = require('./user')(sequelize);
 const Action = require('./action')(sequelize);
-const Run = require('./run')(sequelize);
+const Exec = require('./exec')(sequelize);
 
 User.hasMany(Action, {
   as: 'actions',
   onDelete: 'cascade',
 });
 
-Action.hasMany(Run, {
-  as: 'runs',
+Action.belongsTo(User, { as: 'user' });
+
+Action.hasMany(Exec, {
+  as: 'execs',
   onDelete: 'cascade',
 });
 
-Run.belongsTo(Action, { as: 'action' });
+Exec.belongsTo(Action, { as: 'action' });
 
 module.exports = {
   fixtures,
@@ -33,5 +35,5 @@ module.exports = {
   Sequelize,
   User,
   Action,
-  Run,
+  Exec,
 };

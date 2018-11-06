@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 const cuid = require('cuid');
-const { RUN_STATUS } = require('../constants');
+const { EXEC_STATUS } = require('../constants');
 
 const DataTypes = Sequelize.DataTypes;
 
 module.exports = sequelize => {
-  const Run = sequelize.define('run', {
-    runId: {
-      field: 'run_id',
+  const Exec = sequelize.define('exec', {
+    execId: {
+      field: 'exec_id',
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: () => cuid(),
@@ -16,12 +16,12 @@ module.exports = sequelize => {
       field: 'status',
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: RUN_STATUS.RUNNING,
+      defaultValue: EXEC_STATUS.RUNNING,
       validate: {
         isIn: [[
-          RUN_STATUS.RUNNING,
-          RUN_STATUS.SUCCESS,
-          RUN_STATUS.ERROR,
+          EXEC_STATUS.RUNNING,
+          EXEC_STATUS.SUCCESS,
+          EXEC_STATUS.ERROR,
         ]],
       },
     },
@@ -87,7 +87,7 @@ module.exports = sequelize => {
       {
         unique: true,
         fields: [
-          'run_id',
+          'exec_id',
         ],
       },
     ],
@@ -95,5 +95,5 @@ module.exports = sequelize => {
     underscored: true,
   });
 
-  return Run;
+  return Exec;
 };

@@ -9,7 +9,7 @@ const edit = require('./edit');
 const ifNotExists = require('./if-not-exists');
 const hasAuthority = require('./has-authority');
 const action = require('./action');
-const run = require('./run');
+const exec = require('./exec');
 
 module.exports = {
   error,
@@ -23,5 +23,5 @@ module.exports = {
   ifNotExists,
   hasAuthority,
   action,
-  run,
+  exec,
 };

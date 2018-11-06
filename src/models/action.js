@@ -9,17 +9,21 @@ module.exports = sequelize => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [1, 18],
-        isAlpha: true,
+        len: [1, 42],
       },
     },
     url: {
       field: 'url',
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isUrl: true,
       },
+    },
+    description: {
+      field: 'description',
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     script: {
       field: 'script',
@@ -51,6 +55,12 @@ module.exports = sequelize => {
     },
     useUnderscore: {
       field: 'use_underscore',
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    useTableToJSON: {
+      field: 'use_table_to_json',
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,

@@ -1,14 +1,14 @@
-const { Run, Action } = require('../models');
+const { Exec, Action } = require('../models');
 const { QUERY_METHODS } = require('../constants');
 const find = require('./find');
 
-const getRunById = (end = false) => (
+const getExecById = (end = false) => (
   find({
     end,
-    model: Run,
+    model: Exec,
     method: QUERY_METHODS.findOne,
     where: req => ({
-      runId: req.params.runId,
+      execId: req.params.execId,
     }),
     include: [
       {
@@ -24,5 +24,5 @@ const getRunById = (end = false) => (
 );
 
 module.exports = {
-  getRunById,
+  getExecById,
 };

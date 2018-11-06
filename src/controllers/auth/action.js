@@ -1,4 +1,4 @@
-const { Action } = require('../../models');
+const { Action, User } = require('../../models');
 const {
   find,
   create,
@@ -10,9 +10,34 @@ const { QUERY_METHODS } = require('../../constants');
 const getActions = find({
   model: Action,
   method: QUERY_METHODS.findAndCountAll,
-  where: req => ({
-    user_id: req.user.id,
-  }),
+  include: req => {
+    const include = [];
+
+    if (req.query.user) {
+      include.push({
+        model: User,
+        as: 'user',
+        where: {
+          username: req.query.user,
+        },
+      });
+    }
+
+    return include;
+  },
+  where: req => {
+    const where = {};
+
+    if (req.query.user) {
+      if (!req.user || req.user.username !== req.query.user) {
+        where.isPublic = true;
+      }
+    } else {
+      where.isPublic = true;
+    }
+
+    return where;
+  },
 });
 
 const getAction = find({
@@ -22,6 +47,13 @@ const getAction = find({
     user_id: req.user.id,
     actionId: req.params.actionId,
   }),
+  include: [
+    {
+      model: User,
+      as: 'user',
+      attributes: ['username'],
+    },
+  ],
 });
 
 const createAction = create({
@@ -35,6 +67,7 @@ const createAction = create({
     actionId: `${req.user.username}~${req.body.name}`,
     isPublic: req.body.isPublic,
     useJQuery: req.body.useJQuery,
+    useTableToJSON: req.body.useTableToJSON,
     useUnderscore: req.body.useUnderscore,
     cacheResponse: req.body.cacheResponse,
     cacheDuration: req.body.cacheDuration,
@@ -51,9 +84,11 @@ const editAction = edit({
   data: req => {
     const data = {
       url: req.body.url,
+      description: req.body.description,
       script: req.body.script,
       isPublic: req.body.isPublic,
       useJQuery: req.body.useJQuery,
+      useTableToJSON: req.body.useTableToJSON,
       useUnderscore: req.body.useUnderscore,
       cacheResponse: req.body.cacheResponse,
       cacheDuration: req.body.cacheDuration,

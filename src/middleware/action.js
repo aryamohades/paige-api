@@ -8,7 +8,6 @@ const getActionById = (end = false) => (
     model: Action,
     method: QUERY_METHODS.findOne,
     where: req => ({
-      user_id: req.user.id,
       actionId: req.params.actionId,
     }),
     updateRequest: (req, data) => {
