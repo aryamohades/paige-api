@@ -1,5 +1,5 @@
 # Paige
-Build web page scrapers and web crawlers that run in the cloud. No confusing setup necessary; just create an endpoint, point it at a url, and paste in your page script.
+Build web page scrapers and web crawlers that run in the cloud. No setup necessary; just create a task, point it at a url, and provide in your page script.
 
 **Features**
 * Use JQuery or Underscore as needed. They are injected into the requested page dynamically.
